@@ -1,0 +1,7 @@
+protection:
+  flags:
+    MINE_FRAME:
+      name: MineFrame
+      description: |
+        &bToggle who can
+        &bmine frames.

@@ -1,0 +1,11 @@
+name: FrameMiner
+main: world.bentobox.frameminer.FrameMiner
+version: ${version}
+
+authors: [tastybento, Poslovitch, AwakenedRedstone]
+
+softdepend: BSkyBlock
+
+permissions:
+  bskyblock.frameminer.mine:
+    description: None
