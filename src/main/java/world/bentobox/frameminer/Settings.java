@@ -19,7 +19,7 @@ public class Settings implements DataObject {
     @ConfigComment("")
     @ConfigComment("Base damage that will be applied on the pickaxes")
     @ConfigEntry(path = "frameminer.values.damage")
-    private short damage = 5;
+    private int damage = 5;
 
     @ConfigComment("")
     @ConfigComment("Resistance of each unbreaking level.")
@@ -27,7 +27,7 @@ public class Settings implements DataObject {
     @ConfigComment("The resistance works on this way: \"damage - (resistance * \"unbreaking level\")\"")
     @ConfigComment("If the value get to 0 or lower the pickaxe do not get damage.")
     @ConfigEntry(path = "frameminer.values.resistance")
-    private short resistance = 1;
+    private int resistance = 1;
 
 
     private String uniqueId = "config";
@@ -42,11 +42,11 @@ public class Settings implements DataObject {
         this.uniqueId = uniqueId;
     }
 
-    public void setDamage(short damage) {
+    public void setDamage(int damage) {
         this.damage = damage;
     }
 
-    public short getDamage() {
+    public int getDamage() {
         return damage;
     }
 
@@ -58,11 +58,11 @@ public class Settings implements DataObject {
         return adminCommand;
     }
 
-    public void setResistance(short resistance) {
+    public void setResistance(int resistance) {
         this.resistance = resistance;
     }
 
-    public short getResistance() {
+    public int getResistance() {
         return resistance;
     }
 }

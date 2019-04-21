@@ -1,6 +1,7 @@
 package world.bentobox.frameminer;
 
 import org.bukkit.Material;
+import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
@@ -9,8 +10,10 @@ import world.bentobox.frameminer.event.BreakerEventListener;
 
 public final class FrameMiner extends Addon {
 
+    private static FrameMiner instance;
+
     public static Flag MINE_FRAME =
-            new Flag.Builder("MINE_FRAME", Material.END_PORTAL_FRAME).listener(new BreakerEventListener()).build();
+            new Flag.Builder("MINE_FRAME", Material.END_PORTAL_FRAME).listener(new BreakerEventListener(getInstance())).build();
 
     private Settings settings;
 
@@ -21,7 +24,8 @@ public final class FrameMiner extends Addon {
 
         getPlugin().getFlagsManager().registerFlag(MINE_FRAME);
         getLogger().info("FrameMiner started");
-        getServer().getPluginManager().registerEvents(new BreakerEventListener(), getPlugin());
+        getLogger().info("\n\n\n\n\n\n\nMineDamage: " + getSettings().getDamage() + "\n\n\n\n\n\n\nResistance: " + getSettings().getResistance());
+        getServer().getPluginManager().registerEvents(new BreakerEventListener(this), getPlugin());
 
     }
 
@@ -41,12 +45,12 @@ public final class FrameMiner extends Addon {
 
 
     private void loadSettings() {
-        this.settings = new Config<>(this, Settings.class).loadConfigObject();
+        settings = new Config<>(this, Settings.class).loadConfigObject();
 
-        if (this.settings == null) {
+        if (settings == null) {
             // Disable
-            this.logError("FrameMiner settings could not load! Addon disabled.");
-            this.setState(State.DISABLED);
+            logError("FrameMiner settings could not load! Addon disabled.");
+            setState(State.DISABLED);
         }
 
     }
@@ -62,5 +66,9 @@ public final class FrameMiner extends Addon {
      */
     public Settings getSettings() {
         return settings;
+    }
+
+    public static FrameMiner getInstance() {
+       return instance;
     }
 }

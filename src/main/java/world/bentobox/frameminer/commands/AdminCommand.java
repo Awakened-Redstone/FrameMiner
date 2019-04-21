@@ -19,7 +19,7 @@ public class AdminCommand extends CompositeCommand {
     @Override
     public void setup() {
         setPermission("admin.frameminer.*");
-        new AdminReloadCommand(this);
+        new FMReloadCommand(this);
     }
 
     @Override

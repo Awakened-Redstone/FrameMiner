@@ -16,6 +16,7 @@ public class FMReloadCommand extends AdminReloadCommand {
     @Override
     public boolean execute(User user, String label, List<String> args) {
         getAddon().onReload();
+        getPlugin().reloadConfig();
         user.sendMessage("§b§lServer §8§l: §7FrameMiner has been reloaded.");
         return true;
     }
