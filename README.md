@@ -23,8 +23,8 @@ The Unbreaking works.
 
 To get the pickaxe at the moment do this command:
 
-`</give @s diamond_pickaxe{display:{Lore:["\u00a77Brutal I"]}}>`,
+`/give @s diamond_pickaxe{display:{Lore:["\u00a77Brutal I"]}}`,
 
-if this don't work due a plugin than do `</minecraft:give @s diamond_pickaxe{display:{Lore:["\u00a77Brutal I"]}}>`, 
+if this don't work due a plugin than do `/minecraft:give @s diamond_pickaxe{display:{Lore:["\u00a77Brutal I"]}}`, 
 
-if it fails to than run on console this one `</give (your_nick) diamond_pickaxe{display:{Lore:["§7Brutal I"]}}>`
+if it fails to than run on console this one `/give <your_nick> diamond_pickaxe{display:{Lore:["§7Brutal I"]}}`
