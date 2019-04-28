@@ -47,7 +47,6 @@ public class BreakerEventListener implements Listener {
             Player player = event.getPlayer();
             User user = User.getInstance(player);
             Location loc = event.getBlock().getLocation();
-            if (event.getPlayer().getInventory().firstEmpty() != -1) {
                 getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
                     if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
                             event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) &&
@@ -135,9 +134,6 @@ public class BreakerEventListener implements Listener {
                         } else {player.sendMessage("§cIsland protected: Frame breaking disabled.");}
                     }
                 }, 3L);
-            } else {
-                event.getPlayer().sendMessage("§c§lError §8§l: §7Can't mine the frame. For security you need at least §a§l1 §b§lempty §7slot. ");
-            }
         } catch (Exception e) {
             //Error message cancelled.
         }
