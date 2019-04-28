@@ -20,9 +20,6 @@ public final class FrameMiner extends Addon {
     @Override
     public void onEnable() {
 
-        logError("Fail. Error located on frame mining permissions");
-        setState(State.DISABLED);
-
         new AdminCommand(this);
 
         getPlugin().getFlagsManager().registerFlag(MINE_FRAME);

@@ -17,9 +17,13 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
+import world.bentobox.bentobox.managers.IslandsManager;
 import world.bentobox.frameminer.FrameMiner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,6 +34,7 @@ public class BreakerEventListener implements Listener {
 
     FrameMiner addon;
     EndPortalFrame frame;
+    IslandsManager islandsManager;
 
     public BreakerEventListener(FrameMiner addon) {
         super();
@@ -38,100 +43,105 @@ public class BreakerEventListener implements Listener {
 
     @EventHandler
     public void onBlockDamage (BlockDamageEvent event) {
-        if (event.getPlayer().getInventory().firstEmpty() != -1) {
-            getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
-                if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) && event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) && Objects.requireNonNull(Objects.requireNonNull(event.getItemInHand().getItemMeta()).getLore()).contains("§7Brutal I")) {
-            /*try {
-                Thread.sleep (300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-                    if (!event.getBlock().isEmpty()) {
-                        Player player = event.getPlayer();
-                        ItemStack item = new ItemStack(event.getItemInHand());
-                        ItemMeta meta = item.getItemMeta();
-                        Damageable dmg = (Damageable) meta;
-                        try {
-                            if (dmg != null) {
-                                if (!event.getItemInHand().getItemMeta().isUnbreakable()) {
-                                    if (event.getItemInHand().getEnchantments().containsKey(Enchantment.DURABILITY)) {
-                                        //Reduce the damage depending on the Unbreaking level
-                                        int durability = event.getItemInHand().getEnchantmentLevel(Enchantment.DURABILITY);
-                                        int reduce = getResistance(event) * durability;
-                                        if (reduce < getMineDamage(event) && durability > 0) { //Resistant Pickaxe
-                                            //Damage the pickaxe
-                                            int damage = dmg.getDamage() + getMineDamage(event) - reduce;
+        try {
+            Player player = event.getPlayer();
+            User user = User.getInstance(player);
+            Location loc = event.getBlock().getLocation();
+            if (event.getPlayer().getInventory().firstEmpty() != -1) {
+                getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
+                    if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
+                            event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) &&
+                            Objects.requireNonNull(Objects.requireNonNull(event.getItemInHand().getItemMeta()).getLore()).contains("§7Brutal I")) {
+                        if (addon.getIslands().getIslandAt(loc).map(i -> i.isAllowed(user, FrameMiner.MINE_FRAME)).orElse(false)) {
+
+                            if (!event.getBlock().isEmpty()) {
+                                ItemStack item = new ItemStack(event.getItemInHand());
+                                ItemMeta meta = item.getItemMeta();
+                                Damageable dmg = (Damageable) meta;
+                                if (dmg != null) {
+                                    if (!event.getItemInHand().getItemMeta().isUnbreakable()) {
+                                        if (event.getItemInHand().getEnchantments().containsKey(Enchantment.DURABILITY)) {
+                                            //Reduce the damage depending on the Unbreaking level
+                                            int durability = event.getItemInHand().getEnchantmentLevel(Enchantment.DURABILITY);
+                                            int reduce = getResistance() * durability;
+                                            if (reduce < getMineDamage() && durability > 0) { //Resistant Pickaxe
+                                                //Damage the pickaxe
+                                                int damage = dmg.getDamage() + getMineDamage() - reduce;
+                                                dmg.setDamage(damage);
+                                                item.setItemMeta(meta);
+                                                event.getPlayer().setItemInHand(item);
+                                                //Mine the frame
+                                                if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
+                                                    addItem(new ItemStack(Material.ENDER_EYE), player);
+                                                    X = event.getBlock().getLocation().getBlockX();
+                                                    Y = event.getBlock().getLocation().getBlockY();
+                                                    Z = event.getBlock().getLocation().getBlockZ();
+                                                    removePortal(event);
+                                                }
+                                                event.getBlock().breakNaturally();
+                                                addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
+                                                /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
+                                            } else { //Totally resistant Pickaxe
+                                                //Mine the frame
+                                                //Mine the frame
+                                                if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
+                                                    addItem(new ItemStack(Material.ENDER_EYE), player);
+                                                    X = event.getBlock().getLocation().getBlockX();
+                                                    Y = event.getBlock().getLocation().getBlockY();
+                                                    Z = event.getBlock().getLocation().getBlockZ();
+                                                    removePortal(event);
+                                                }
+                                                event.getBlock().breakNaturally();
+                                                addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
+                                                /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
+                                            }
+                                        } else { //Normal Pickaxe
+                                            //Apply the damage on the tool
+                                            int damage = dmg.getDamage() + getMineDamage();
                                             dmg.setDamage(damage);
                                             item.setItemMeta(meta);
                                             event.getPlayer().setItemInHand(item);
                                             //Mine the frame
                                             if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
-                                                player.getInventory().addItem(new ItemStack(Material.ENDER_EYE));
+                                                addItem(new ItemStack(Material.ENDER_EYE), player);
                                                 X = event.getBlock().getLocation().getBlockX();
                                                 Y = event.getBlock().getLocation().getBlockY();
                                                 Z = event.getBlock().getLocation().getBlockZ();
                                                 removePortal(event);
                                             }
                                             event.getBlock().breakNaturally();
-                                            player.getInventory().addItem(new ItemStack(Material.END_PORTAL_FRAME));
-                                            /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
-                                        } else { //Totally resistant Pickaxe
-                                            //Mine the frame
-                                            //Mine the frame
-                                            if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
-                                                player.getInventory().addItem(new ItemStack(Material.ENDER_EYE));
-                                                X = event.getBlock().getLocation().getBlockX();
-                                                Y = event.getBlock().getLocation().getBlockY();
-                                                Z = event.getBlock().getLocation().getBlockZ();
-                                                removePortal(event);
-                                            }
-                                            event.getBlock().breakNaturally();
-                                            player.getInventory().addItem(new ItemStack(Material.END_PORTAL_FRAME));
+                                            addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                             /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                         }
-                                    } else { //Normal Pickaxe
-                                        //Apply the damage on the tool
-                                        int damage = dmg.getDamage() + getMineDamage(event);
-                                        dmg.setDamage(damage);
-                                        item.setItemMeta(meta);
-                                        event.getPlayer().setItemInHand(item);
+                                    } else if (event.getItemInHand().getItemMeta().isUnbreakable()) { //Unbreakable Pickaxe
                                         //Mine the frame
                                         if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
-                                            player.getInventory().addItem(new ItemStack(Material.ENDER_EYE));
+                                            addItem(new ItemStack(Material.ENDER_EYE), player);
                                             X = event.getBlock().getLocation().getBlockX();
                                             Y = event.getBlock().getLocation().getBlockY();
                                             Z = event.getBlock().getLocation().getBlockZ();
                                             removePortal(event);
                                         }
                                         event.getBlock().breakNaturally();
-                                        player.getInventory().addItem(new ItemStack(Material.END_PORTAL_FRAME));
+                                        addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                         /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
+                                    } else {
+                                        event.getPlayer().sendMessage("§c§lError §8§l: §7Something is wrong with your pickaxe");
                                     }
-                                } else if (event.getItemInHand().getItemMeta().isUnbreakable()) { //Unbreakable Pickaxe
-                                    //Mine the frame
-                                    if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
-                                        player.getInventory().addItem(new ItemStack(Material.ENDER_EYE));
-                                        X = event.getBlock().getLocation().getBlockX();
-                                        Y = event.getBlock().getLocation().getBlockY();
-                                        Z = event.getBlock().getLocation().getBlockZ();
-                                        removePortal(event);
-                                    }
-                                    event.getBlock().breakNaturally();
-                                    player.getInventory().addItem(new ItemStack(Material.END_PORTAL_FRAME));
-                                    /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                 } else {
                                     event.getPlayer().sendMessage("§c§lError §8§l: §7Something is wrong with your pickaxe");
                                 }
-                            } else {
-                                event.getPlayer().sendMessage("§c§lError §8§l: §7Something is wrong with your pickaxe");
                             }
-                        } catch (Exception e) {
-                            //Error message cancelled.
-                        }
+                        } else {player.sendMessage("§cIsland protected: Frame breaking disabled.");}
                     }
-                }
-            }, 3L);
-        } else {event.getPlayer().sendMessage("§c§lError §8§l: §7Can't mine the frame. For security you need at least §a§l1 §b§lempty §7slot. ");}
+                }, 3L);
+            } else {
+                event.getPlayer().sendMessage("§c§lError §8§l: §7Can't mine the frame. For security you need at least §a§l1 §b§lempty §7slot. ");
+            }
+        } catch (Exception e) {
+            //Error message cancelled.
+        }
+
     }
 
     private int X;
@@ -144,12 +154,16 @@ public class BreakerEventListener implements Listener {
 
     private int A;*/
 
-    private int getMineDamage(BlockDamageEvent event) {
+    private int getMineDamage() {
         return addon.getSettings().getDamage();
     }
 
-    private int getResistance(BlockDamageEvent event) {
+    private int getResistance() {
         return addon.getSettings().getResistance();
+    }
+
+    private String getInventoryFull() {
+        return addon.getSettings().getFullInventory();
     }
 
     /*private void removePortal(BlockDamageEvent event) {
@@ -182,6 +196,16 @@ public class BreakerEventListener implements Listener {
         }
     }
 
+    private void addItem(ItemStack item, Player player) {
+        Location loc = player.getLocation();
+        World world = player.getWorld();
+        if (player.getInventory().firstEmpty() != -1) {
+            player.getInventory().addItem(item);
+        } else {
+            world.dropItem(loc, item);
+            player.sendMessage(getInventoryFull());
+        }
+    }
 
 
     /*private void removePortalLoop(BlockDamageEvent event) {

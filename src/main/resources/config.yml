@@ -16,3 +16,7 @@ frameminer:
     # The resistance works on this way: {damage - (resistance * "unbreaking level")}
     # If the value get to 0 or lower the pickaxe do not get damage.
     resistance: 1
+
+  messages:
+    warnings:
+      fullinv: §cInventory full. Dropping Item.

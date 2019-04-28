@@ -20,6 +20,8 @@ public class AdminCommand extends CompositeCommand {
     public void setup() {
         setPermission("admin.frameminer.*");
         new FMReloadCommand(this);
+        //new FMEnchant(this);
+        //new FMEnchantBook(this);
     }
 
     @Override

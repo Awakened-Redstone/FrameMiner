@@ -29,6 +29,13 @@ public class Settings implements DataObject {
     @ConfigEntry(path = "frameminer.values.resistance")
     private int resistance = 1;
 
+    /* Messages */
+    @ConfigComment("")
+    @ConfigComment("Warning to full Inventory")
+    @ConfigEntry(path = "frameminer.messages.warnings.fullinv")
+    private String fullInventory = "§cInventory full. Dropping Item.";
+
+
 
     private String uniqueId = "config";
 
@@ -64,5 +71,13 @@ public class Settings implements DataObject {
 
     public int getResistance() {
         return resistance;
+    }
+
+    public void setFullInventory(String fullInventory) {
+        this.fullInventory = fullInventory;
+    }
+
+    public String getFullInventory() {
+        return fullInventory;
     }
 }
