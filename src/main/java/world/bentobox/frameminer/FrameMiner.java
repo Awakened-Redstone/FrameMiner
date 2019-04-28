@@ -24,7 +24,6 @@ public final class FrameMiner extends Addon {
 
         getPlugin().getFlagsManager().registerFlag(MINE_FRAME);
         getLogger().info("FrameMiner started");
-        getLogger().info("\n\n\n\n\n\n\nMineDamage: " + getSettings().getDamage() + "\n\n\n\n\n\n\nResistance: " + getSettings().getResistance());
         getServer().getPluginManager().registerEvents(new BreakerEventListener(this), getPlugin());
 
     }
