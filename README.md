@@ -7,6 +7,8 @@ The addon enable players to mine End Portal Frame on BSkyBlock.
 
 the addon has been made to servers that the players have to get the portal frame, but if it is placed wrong a lot of issues happen, then the plugin comes, it "fix" this issues, because the player can mine the frame and place it correctly.
 
+Click on the build to go to the download page
+
 ## Installation
 
 0. Install BentoBox and run it on the server at least once to create its data folders.
