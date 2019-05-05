@@ -1,11 +1,11 @@
 package world.bentobox.frameminer;
 
 import org.bukkit.Material;
-import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
 import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.api.flags.Flag;
 import world.bentobox.frameminer.commands.AdminCommand;
+import world.bentobox.frameminer.event.AnvilEnchantListener;
 import world.bentobox.frameminer.event.BreakerEventListener;
 
 public final class FrameMiner extends Addon {
@@ -24,7 +24,7 @@ public final class FrameMiner extends Addon {
 
         getPlugin().getFlagsManager().registerFlag(MINE_FRAME);
         getLogger().info("FrameMiner started");
-        getServer().getPluginManager().registerEvents(new BreakerEventListener(this), getPlugin());
+        registerEvents();
 
     }
 
@@ -38,9 +38,7 @@ public final class FrameMiner extends Addon {
     }
 
     @Override
-    public void onDisable() {
-        getLogger().info(getPlugin().getName() + "Stopped");
-    }
+    public void onDisable() {}
 
 
     private void loadSettings() {
@@ -69,5 +67,10 @@ public final class FrameMiner extends Addon {
 
     public static FrameMiner getInstance() {
        return instance;
+    }
+
+    private void registerEvents() {
+        getServer().getPluginManager().registerEvents(new BreakerEventListener(this), getPlugin());
+        //getServer().getPluginManager().registerEvents(new AnvilEnchantListener(this), getPlugin());
     }
 }

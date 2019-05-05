@@ -1,12 +1,12 @@
 package world.bentobox.frameminer.commands;
 
 import world.bentobox.bentobox.api.commands.CompositeCommand;
-import world.bentobox.bentobox.api.commands.admin.AdminReloadCommand;
 import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 import world.bentobox.frameminer.FrameMiner;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AdminCommand extends CompositeCommand {
 
@@ -20,8 +20,8 @@ public class AdminCommand extends CompositeCommand {
     public void setup() {
         setPermission("admin.frameminer.*");
         new FMReloadCommand(this);
-        //new FMEnchant(this);
-        //new FMEnchantBook(this);
+        new FMPickaxe(this);
+        new FMEnchantBook(this);
     }
 
     @Override
@@ -33,4 +33,5 @@ public class AdminCommand extends CompositeCommand {
         }
         return false;
     }
+
 }

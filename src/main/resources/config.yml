@@ -19,4 +19,4 @@ frameminer:
 
   messages:
     warnings:
-      fullinv: §cInventory full. Dropping Item.
+      fullinv: "§cInventory full. Dropping Item."

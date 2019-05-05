@@ -10,27 +10,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class FMEnchantBook extends CompositeCommand {
-    public FMEnchantBook(CompositeCommand adminCommand) {
-        super(adminCommand, "book");
+public class FMPickaxe extends CompositeCommand {
+    public FMPickaxe(CompositeCommand adminCommand) {
+        super(adminCommand, "pickaxe");
     }
 
     @Override
     public void setup() {
-        setPermission("admin.frameminer.book");
-        setDescription("frameminer.admin.book.description");
+        setPermission("admin.frameminer.getpickaxe");
+        setDescription("frameminer.admin.getpickaxe.description");
     }
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
+        ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
         if (user.getInventory().firstEmpty() != -1) {
             ItemMeta meta = item.getItemMeta();
             meta.setLore(Collections.singletonList("§7Brutal I"));
             item.setItemMeta(meta);
             user.getInventory().addItem(item);
         } else {
-            user.sendMessage("§cInventory full. Can't give the book.");
+            user.sendMessage("§cInventory full. Can't give the pickaxe.");
         }
         return true;
     }
