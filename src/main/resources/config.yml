@@ -9,12 +9,14 @@ frameminer:
   values:
 
     # Base damage that will be applied on the pickaxes
+    # Up to 32767
     damage: 5
 
     # Resistance of each unbreaking level.
     # The value set is multiplied by the unbreaking level.
     # The resistance works on this way: {damage - (resistance * "unbreaking level")}
     # If the value get to 0 or lower the pickaxe do not get damage.
+    # Up to 32767
     resistance: 1
 
   messages:
