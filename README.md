@@ -26,3 +26,11 @@ The Unbreaking enchantment works.
 To get the pickaxe do the command:
 
 `/fm pickaxe`
+
+## Warning
+
+If you are using the FrameMiner code on a project then give the credits. 
+
+Redistributing the FrameMiner it's unacceptable. 
+
+We ask you to put a link to this repository to other people download the addon.
