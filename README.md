@@ -21,8 +21,16 @@ Click on the build to go to the download page
 
 First of all, to mine the frame **ONLY** works with diamond pickaxe.
 
-The Unbreaking works.
+The Unbreaking enchantment works.
 
-To get the pickaxe at the moment do this command on the console:
+To get the pickaxe do the command:
 
-`/give <your_nick> diamond_pickaxe{display:{Lore:["§7Brutal I"]}}`
+`/fm pickaxe`
+
+## Warning
+
+If you are using the FrameMiner code on a project then give the credits. 
+
+Redistributing the FrameMiner it's unacceptable. 
+
+We ask you to put a link to this repository to other people download the addon.
