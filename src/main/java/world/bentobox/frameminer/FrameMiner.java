@@ -71,6 +71,6 @@ public final class FrameMiner extends Addon {
 
     private void registerEvents() {
         getServer().getPluginManager().registerEvents(new BreakerEventListener(this), getPlugin());
-        //getServer().getPluginManager().registerEvents(new AnvilEnchantListener(this), getPlugin());
+        getServer().getPluginManager().registerEvents(new AnvilEnchantListener(this), getPlugin());
     }
 }
