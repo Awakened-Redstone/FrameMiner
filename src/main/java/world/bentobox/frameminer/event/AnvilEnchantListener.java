@@ -52,8 +52,12 @@ public class AnvilEnchantListener implements Listener {
                     bookMeta.setLore(bookLore);
                     book.setItemMeta(bookMeta);
 
+                    if (pickaxe.getItemMeta() != null && resultMeta.hasLore() && player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
+                        return;
+                    }
+
                     if (resultMeta != null) {
-                        if (resultMeta.hasLore() && !player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
+                        if (resultMeta.hasLore()) {
                             List<String> oldLore = new ArrayList<>(resultMeta.getLore());
                             List<String> newLore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
                             List<String> lore = new ArrayList<>();
@@ -61,7 +65,7 @@ public class AnvilEnchantListener implements Listener {
                             lore.addAll(oldLore);
                             resultMeta.setLore(lore);
                             result.setItemMeta(resultMeta);
-                        } else if (!player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
+                        } else {
                             List<String> lore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
                             resultMeta.setLore(lore);
                             result.setItemMeta(resultMeta);
@@ -73,7 +77,7 @@ public class AnvilEnchantListener implements Listener {
                     }
 
                     // create merchant:
-                    Merchant merchant = Bukkit.createMerchant("§7FrameMiner Anvil");
+                    Merchant merchant = Bukkit.createMerchant("§8FrameMiner Anvil");
 
                     // setup trading recipes:
                     List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();

@@ -1,9 +1,14 @@
 package world.bentobox.frameminer.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.bukkit.Bukkit.createBossBar;
 import static org.bukkit.Bukkit.getServer;
+import static org.bukkit.Sound.ENTITY_ITEM_BREAK;
 
 public class BreakerEventListener implements Listener {
 
@@ -36,14 +43,15 @@ public class BreakerEventListener implements Listener {
             Player player = event.getPlayer();
             User user = User.getInstance(player);
             Location loc = event.getBlock().getLocation();
+            ItemStack air = new ItemStack(Material.AIR);
+            int slot = player.getInventory().getHeldItemSlot();
                 getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
                     if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
                             event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) &&
                             Objects.requireNonNull(Objects.requireNonNull(event.getItemInHand().getItemMeta()).getLore()).contains("§7Brutal I")) {
                         if (addon.getIslands().getIslandAt(loc).map(i -> i.isAllowed(user, FrameMiner.MINE_FRAME)).orElse(false)) {
-
-                            if (!event.getBlock().isEmpty()) {
-                                ItemStack item = new ItemStack(event.getItemInHand());
+                            if (!event.getBlock().isEmpty() && player.getInventory().getHeldItemSlot() == slot) {
+                                ItemStack item = player.getInventory().getItemInMainHand();
                                 ItemMeta meta = item.getItemMeta();
                                 Damageable dmg = (Damageable) meta;
                                 if (dmg != null) {
@@ -57,7 +65,11 @@ public class BreakerEventListener implements Listener {
                                                 int damage = dmg.getDamage() + getMineDamage() - reduce;
                                                 dmg.setDamage(damage);
                                                 item.setItemMeta(meta);
-                                                event.getPlayer().setItemInHand(item);
+                                                if (damage >= 1560) {
+                                                    item = air;
+                                                    player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 100, 1);
+                                                    player.getInventory().setItemInMainHand(item);
+                                                }
                                                 //Mine the frame
                                                 if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
                                                     addItem(new ItemStack(Material.ENDER_EYE), player);
@@ -67,6 +79,7 @@ public class BreakerEventListener implements Listener {
                                                     removePortal(event);
                                                 }
                                                 event.getBlock().breakNaturally();
+                                                player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 5, 0);
                                                 addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                                 /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                             } else { //Totally resistant Pickaxe
@@ -80,6 +93,7 @@ public class BreakerEventListener implements Listener {
                                                     removePortal(event);
                                                 }
                                                 event.getBlock().breakNaturally();
+                                                player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 5, 0);
                                                 addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                                 /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                             }
@@ -88,7 +102,11 @@ public class BreakerEventListener implements Listener {
                                             int damage = dmg.getDamage() + getMineDamage();
                                             dmg.setDamage(damage);
                                             item.setItemMeta(meta);
-                                            event.getPlayer().setItemInHand(item);
+                                            if (damage >= 1560) {
+                                                item = air;
+                                                player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 100, 1);
+                                                player.getInventory().setItemInMainHand(item);
+                                            }
                                             //Mine the frame
                                             if (event.getBlock().getBlockData().getAsString().contains("eye=true")) {
                                                 addItem(new ItemStack(Material.ENDER_EYE), player);
@@ -98,6 +116,7 @@ public class BreakerEventListener implements Listener {
                                                 removePortal(event);
                                             }
                                             event.getBlock().breakNaturally();
+                                            player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 5, 0);
                                             addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                             /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                         }
@@ -111,6 +130,7 @@ public class BreakerEventListener implements Listener {
                                             removePortal(event);
                                         }
                                         event.getBlock().breakNaturally();
+                                        player.playSound(player.getLocation(), ENTITY_ITEM_BREAK, 5, 0);
                                         addItem(new ItemStack(Material.END_PORTAL_FRAME), player);
                                         /*event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), new ItemStack(Material.END_PORTAL_FRAME));*/
                                     } else {
@@ -118,6 +138,24 @@ public class BreakerEventListener implements Listener {
                                     }
                                 } else {
                                     event.getPlayer().sendMessage("§c§lError §8§l: §7Something is wrong with your pickaxe");
+                                }
+                            } else if (player.getInventory().getHeldItemSlot() != slot) {
+                                player.sendMessage("§b§lFrameMiner§8: §cNice try.");
+                                player.setLevel(player.getLevel() - 5);
+                                player.sendTitle("§b§lFrameMiner", "§cDon't do that again", 15, 500, 0);
+                                BossBar bossBar = createBossBar("Cooldown", BarColor.RED, BarStyle.SEGMENTED_12, BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY);
+                                bossBar.addPlayer(player);
+                                bossBar.setVisible(true);
+                                bossBar.setProgress(0);
+                                for (double i = 0.00; bossBar.getProgress() < 1; i = i + 0.0001) {
+                                    bossBar.setProgress(i);
+                                    bossBar.setTitle("§cCooldown [§a" + i * 100 + "§a%§c]");
+                                    if (bossBar.getProgress() == 1) {
+                                        player.resetTitle();
+                                        bossBar.removeAll();
+                                        bossBar.removePlayer(player);
+                                        bossBar.setVisible(false);
+                                    }
                                 }
                             }
                         } else {player.sendMessage("§cIsland protected: Frame breaking disabled.");}
