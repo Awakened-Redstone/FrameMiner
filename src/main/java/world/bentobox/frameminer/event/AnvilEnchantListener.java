@@ -34,60 +34,64 @@ public class AnvilEnchantListener implements Listener {
     }
 
     @EventHandler
-                public void openAnvil(PlayerInteractEvent event) {
-                    if (event.getClickedBlock() != null) {
-                        Material anvil = Material.ANVIL;
-                        Player player = event.getPlayer();
-                        if (event.getClickedBlock().getType() == anvil && player.isSneaking() && player.getItemInHand().getType() == Material.DIAMOND_PICKAXE) {
-                            ItemStack result = player.getItemInHand().clone();
-                            ItemMeta resultMeta = result.getItemMeta();
+    public void openAnvil(PlayerInteractEvent event) {
+        try {
+            if (event.getClickedBlock() != null) {
+                Material anvil = Material.ANVIL;
+                Player player = event.getPlayer();
+                if (event.getClickedBlock().getType() == anvil && player.isSneaking() && player.getItemInHand().getType() == Material.DIAMOND_PICKAXE) {
+                    ItemStack result = player.getItemInHand().clone();
+                    ItemMeta resultMeta = result.getItemMeta();
 
-                            ItemStack pickaxe = player.getItemInHand();
+                    ItemStack pickaxe = player.getItemInHand();
 
-                            ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
-                            ItemMeta bookMeta = book.getItemMeta();
+                    ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
+                    ItemMeta bookMeta = book.getItemMeta();
 
-                            List<String> bookLore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
-                            bookMeta.setLore(bookLore);
-                            book.setItemMeta(bookMeta);
+                    List<String> bookLore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
+                    bookMeta.setLore(bookLore);
+                    book.setItemMeta(bookMeta);
 
-                            if (resultMeta != null) {
-                                if (resultMeta.hasLore() && !player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
-                                    List<String> oldLore = new ArrayList<>(resultMeta.getLore());
-                                    List<String> newLore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
-                                    List<String> lore = new ArrayList<>();
-                                    lore.addAll(newLore);
-                                    lore.addAll(oldLore);
-                                    resultMeta.setLore(lore);
-                                    result.setItemMeta(resultMeta);
-                                } else if (!player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
-                                    List<String> lore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
-                                    resultMeta.setLore(lore);
-                                    result.setItemMeta(resultMeta);
-                                }
-                            } else {
-                                List<String> lore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
-                                resultMeta.setLore(lore);
-                                result.setItemMeta(resultMeta);
-                            }
+                    if (resultMeta != null) {
+                        if (resultMeta.hasLore() && !player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
+                            List<String> oldLore = new ArrayList<>(resultMeta.getLore());
+                            List<String> newLore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
+                            List<String> lore = new ArrayList<>();
+                            lore.addAll(newLore);
+                            lore.addAll(oldLore);
+                            resultMeta.setLore(lore);
+                            result.setItemMeta(resultMeta);
+                        } else if (!player.getItemInHand().getItemMeta().getLore().contains("§7Brutal I")) {
+                            List<String> lore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
+                            resultMeta.setLore(lore);
+                            result.setItemMeta(resultMeta);
+                        }
+                    } else {
+                        List<String> lore = new ArrayList<>(Collections.singletonList("§7Brutal I"));
+                        resultMeta.setLore(lore);
+                        result.setItemMeta(resultMeta);
+                    }
 
-                // create merchant:
-                Merchant merchant = Bukkit.createMerchant("§7FrameMiner Anvil");
+                    // create merchant:
+                    Merchant merchant = Bukkit.createMerchant("§7FrameMiner Anvil");
 
-                // setup trading recipes:
-                List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
-                MerchantRecipe recipe = new MerchantRecipe(result, 10000); // no max-uses limit
-                recipe.setExperienceReward(false); // no experience rewards
-                recipe.addIngredient(pickaxe);
-                recipe.addIngredient(book);
-                merchantRecipes.add(recipe);
+                    // setup trading recipes:
+                    List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
+                    MerchantRecipe recipe = new MerchantRecipe(result, 10000); // no max-uses limit
+                    recipe.setExperienceReward(false); // no experience rewards
+                    recipe.addIngredient(pickaxe);
+                    recipe.addIngredient(book);
+                    merchantRecipes.add(recipe);
 
-                // apply recipes to merchant:
-                merchant.setRecipes(merchantRecipes);
+                    // apply recipes to merchant:
+                    merchant.setRecipes(merchantRecipes);
 
-                // open trading window:
-                player.openMerchant(merchant, true);
+                    // open trading window:
+                    player.openMerchant(merchant, true);
+                }
             }
+        } catch (Exception e) {
+            //nothing
         }
     }
 
