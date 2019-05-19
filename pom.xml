@@ -6,12 +6,12 @@
 
     <groupId>io.github.awakened-redstone</groupId>
     <artifactId>frameminer</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>FrameMiner</name>
 
-    <description>Addon for BSkyBlock</description>
+        <description>Addon for BSkyBlock</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

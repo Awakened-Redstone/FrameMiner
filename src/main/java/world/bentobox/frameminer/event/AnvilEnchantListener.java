@@ -72,7 +72,7 @@ public class AnvilEnchantListener implements Listener {
                             }
 
                 // create merchant:
-                Merchant merchant = Bukkit.createMerchant("§0FrameMiner Anvil");
+                Merchant merchant = Bukkit.createMerchant("§7FrameMiner Anvil");
 
                 // setup trading recipes:
                 List<MerchantRecipe> merchantRecipes = new ArrayList<MerchantRecipe>();
