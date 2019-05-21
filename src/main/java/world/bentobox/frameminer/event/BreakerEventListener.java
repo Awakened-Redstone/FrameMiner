@@ -147,9 +147,12 @@ public class BreakerEventListener implements Listener {
                                 bossBar.addPlayer(player);
                                 bossBar.setVisible(true);
                                 bossBar.setProgress(0);
-                                for (double i = 0.00; bossBar.getProgress() < 1; i = i + 0.0001) {
+                                for (double i = 0.00; bossBar.getProgress() < 1; i = i + 0.01) {
                                     bossBar.setProgress(i);
                                     bossBar.setTitle("§cCooldown [§a" + i * 100 + "§a%§c]");
+                                    getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
+                                        player.sendTitle("§b§lFrameMiner", "§cDon't do that again", 0, 500, 0);
+                                        }, 3L);
                                     if (bossBar.getProgress() == 1) {
                                         player.resetTitle();
                                         bossBar.removeAll();
