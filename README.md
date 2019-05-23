@@ -29,8 +29,6 @@ To get the pickaxe do the command:
 
 ## Warning
 
-If you are using the FrameMiner code on a project then give the credits. 
-
-Redistributing the FrameMiner it's unacceptable. 
+If you are using the FrameMiner code on a project then give the credits.
 
 We ask you to put a link to this repository to other people download the addon.
