@@ -27,6 +27,10 @@ To get the pickaxe do the command:
 
 `/fm pickaxe`
 
+
+
+Waiting applroyal of developer role on Builders Community discord
+
 ## Warning
 
 If you are using the FrameMiner code on a project then give the credits.
