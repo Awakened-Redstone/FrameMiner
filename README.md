@@ -29,7 +29,7 @@ To get the pickaxe do the command:
 
 
 
-Waiting applroyal of developer role on Builders Community discord
+**Discord:** _Awakened Redstone#1956_
 
 ## Warning
 
