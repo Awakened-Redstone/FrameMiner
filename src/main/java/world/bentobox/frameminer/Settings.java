@@ -2,12 +2,12 @@ package world.bentobox.frameminer;
 
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
+import world.bentobox.bentobox.api.configuration.ConfigObject;
 import world.bentobox.bentobox.api.configuration.StoreAt;
-import world.bentobox.bentobox.database.objects.DataObject;
 
-@StoreAt(filename="config.yml", path="addons/FrameMiner") // Explicitly call out what name this should have.
+@StoreAt(filename = "config.yml", path = "addons/FrameMiner") // Explicitly call out what name this should have.
 @ConfigComment("FrameMiner Configuration [version]")
-public class Settings implements DataObject {
+public class Settings implements ConfigObject {
 
     /* Commands */
     @ConfigComment("")
@@ -29,12 +29,15 @@ public class Settings implements DataObject {
     @ConfigEntry(path = "frameminer.values.resistance")
     private int resistance = 1;
 
+    @ConfigComment("Allow breaking with a normal pickaxe")
+    @ConfigEntry(path = "frameminer.values.normal_pickaxe")
+    private boolean normalPickaxe = false;
+
     /* Messages */
     @ConfigComment("")
     @ConfigComment("Warning to full Inventory")
     @ConfigEntry(path = "frameminer.messages.warnings.fullinv")
     private String fullInventory = "§cInventory full. Dropping Item.";
-
 
 
     private String uniqueId = "config";
@@ -55,6 +58,14 @@ public class Settings implements DataObject {
 
     public int getDamage() {
         return damage;
+    }
+
+    public void setNormalPickaxe(boolean value) {
+        this.normalPickaxe = value;
+    }
+
+    public boolean getNormalPickaxe() {
+        return normalPickaxe;
     }
 
     public void setAdminCommand(String adminCommand) {

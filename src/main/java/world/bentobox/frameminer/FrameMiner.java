@@ -12,8 +12,7 @@ public final class FrameMiner extends Addon {
 
     private static FrameMiner instance;
 
-    public static Flag MINE_FRAME =
-            new Flag.Builder("MINE_FRAME", Material.END_PORTAL_FRAME).listener(new BreakerEventListener(getInstance())).build();
+    public static Flag MINE_FRAME = new Flag.Builder("MINE_FRAME", Material.END_PORTAL_FRAME).listener(new BreakerEventListener(getInstance())).build();
 
     private Settings settings;
 
@@ -25,12 +24,11 @@ public final class FrameMiner extends Addon {
         getPlugin().getFlagsManager().registerFlag(MINE_FRAME);
         getLogger().info("FrameMiner started");
         registerEvents();
-
+        instance = this;
     }
 
     @Override
     public void onLoad() {
-
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
@@ -38,18 +36,17 @@ public final class FrameMiner extends Addon {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
 
     private void loadSettings() {
         settings = new Config<>(this, Settings.class).loadConfigObject();
-
         if (settings == null) {
             // Disable
             logError("FrameMiner settings could not load! Addon disabled.");
             setState(State.DISABLED);
         }
-
     }
 
     @Override
@@ -66,7 +63,7 @@ public final class FrameMiner extends Addon {
     }
 
     public static FrameMiner getInstance() {
-       return instance;
+        return instance;
     }
 
     private void registerEvents() {
