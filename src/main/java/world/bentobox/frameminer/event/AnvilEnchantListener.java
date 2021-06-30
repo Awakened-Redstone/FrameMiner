@@ -39,7 +39,7 @@ public class AnvilEnchantListener implements Listener {
             if (event.getClickedBlock() != null) {
                 Material anvil = Material.ANVIL;
                 Player player = event.getPlayer();
-                if (event.getClickedBlock().getType() == anvil && player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_PICKAXE) {
+                if (event.getClickedBlock().getType() == anvil && player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.NETHERITE_PICKAXE) {
                     ItemStack result = player.getInventory().getItemInMainHand().clone();
                     ItemMeta resultMeta = result.getItemMeta();
 
