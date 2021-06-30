@@ -46,7 +46,7 @@ public class BreakerEventListener implements Listener {
             int slot = player.getInventory().getHeldItemSlot();
             getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
                 if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
-                        event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) ) {
+                        event.getItemInHand().getType().equals(Material.NETHERITE_PICKAXE) ) {
                     if (FrameMiner.getInstance().getSettings().getNormalPickaxe() || (
                             event.getItemInHand().hasItemMeta() &&
                                     event.getItemInHand().getItemMeta().hasLore() &&
