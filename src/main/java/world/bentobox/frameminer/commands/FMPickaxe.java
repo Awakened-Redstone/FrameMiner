@@ -23,7 +23,7 @@ public class FMPickaxe extends CompositeCommand {
 
     @Override
     public boolean execute(User user, String label, List<String> args) {
-        ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
+        ItemStack item = new ItemStack(Material.NETHERITE_PICKAXE);
         if (user.getInventory().firstEmpty() != -1) {
             ItemMeta meta = item.getItemMeta();
             meta.setLore(Collections.singletonList("§7Brutal I"));
