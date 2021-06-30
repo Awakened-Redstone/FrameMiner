@@ -19,6 +19,9 @@ frameminer:
     # Up to 32767
     resistance: 1
 
+    # Allow mining with a normal diamond pickaxe
+    normal_pickaxe: false
+
   messages:
     warnings:
       fullinv: "§cInventory full. Dropping Item."

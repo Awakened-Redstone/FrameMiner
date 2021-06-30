@@ -1,6 +1,5 @@
 package world.bentobox.frameminer.event;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -38,17 +37,20 @@ public class BreakerEventListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockDamage (BlockDamageEvent event) {
+    public void onBlockDamage(BlockDamageEvent event) {
         try {
             Player player = event.getPlayer();
             User user = User.getInstance(player);
             Location loc = event.getBlock().getLocation();
             ItemStack air = new ItemStack(Material.AIR);
             int slot = player.getInventory().getHeldItemSlot();
-                getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
-                    if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
-                            event.getItemInHand().getType().equals(Material.DIAMOND_PICKAXE) &&
-                            Objects.requireNonNull(Objects.requireNonNull(event.getItemInHand().getItemMeta()).getLore()).contains("§7Brutal I")) {
+            getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
+                if (event.getBlock().getType().equals(Material.END_PORTAL_FRAME) &&
+                        event.getItemInHand().getType().equals(Material.NETHERITE_PICKAXE) ) {
+                    if (FrameMiner.getInstance().getSettings().getNormalPickaxe() || (
+                            event.getItemInHand().hasItemMeta() &&
+                                    event.getItemInHand().getItemMeta().hasLore() &&
+                                    event.getItemInHand().getItemMeta().getLore().contains("§7Brutal I"))) {
                         if (addon.getIslands().getIslandAt(loc).map(i -> i.isAllowed(user, FrameMiner.MINE_FRAME)).orElse(false)) {
                             if (!event.getBlock().isEmpty() && player.getInventory().getHeldItemSlot() == slot) {
                                 ItemStack item = player.getInventory().getItemInMainHand();
@@ -152,7 +154,7 @@ public class BreakerEventListener implements Listener {
                                     bossBar.setTitle("§cCooldown [§a" + i * 100 + "§a%§c]");
                                     getServer().getScheduler().scheduleSyncDelayedTask(addon.getPlugin(), () -> {
                                         player.sendTitle("§b§lFrameMiner", "§cDon't do that again", 0, 500, 0);
-                                        }, 3L);
+                                    }, 3L);
                                     if (bossBar.getProgress() == 1) {
                                         player.resetTitle();
                                         bossBar.removeAll();
@@ -161,24 +163,20 @@ public class BreakerEventListener implements Listener {
                                     }
                                 }
                             }
-                        } else {player.sendMessage("§cIsland protected: Frame breaking disabled.");}
+                        } else {
+                            player.sendMessage("§cIsland protected: Frame breaking disabled.");
+                        }
                     }
-                }, 3L);
+                }
+            }, 3L);
         } catch (Exception e) {
             //Error message cancelled.
         }
-
     }
 
     private int X;
     private int Y;
     private int Z;
-
-
-    /*private int z;
-    private int x;
-
-    private int A;*/
 
     private int getMineDamage() {
         return addon.getSettings().getDamage();
@@ -192,21 +190,12 @@ public class BreakerEventListener implements Listener {
         return addon.getSettings().getFullInventory();
     }
 
-    /*private void removePortal(BlockDamageEvent event) {
-        Location loc = event.getBlock().getLocation();
-        A = 7;
-        z = loc.getBlockZ() - 3;
-        x = loc.getBlockX() + 4;
-        getLogger().info("\n\n\n\n\nX: " + X + "\nx: " + x + "\nZ: " + Z + "\nz: " + z + "\nB: " + (x - 7) + "\nA: " + A);
-        removePortalLoop(event);
-    }*/
-
     private void removePortal(BlockDamageEvent event) {
         //Make sure you put your world name
         Player player = event.getPlayer();
         World world = player.getWorld();
         //List of materials that you want removed, just copy the structure and add all block materials(types) you wish
-        List<Material> removedMaterials = new ArrayList<Material>();
+        List<Material> removedMaterials = new ArrayList<>();
         removedMaterials.add(Material.END_PORTAL);
         //This runs through each block in the specified region
         for (int x = X - 3; x < X + 4; x++) {
@@ -232,70 +221,4 @@ public class BreakerEventListener implements Listener {
             player.sendMessage(getInventoryFull());
         }
     }
-
-
-    /*private void removePortalLoop(BlockDamageEvent event) {
-        while (A > 0) {
-            Block block = event.getBlock();
-            Material air = Material.AIR;
-            Material portal = Material.END_PORTAL;
-            getLogger().info("\n\n\n" + portal +", " + block + ", " + block.getType());
-            if (A > 0) {
-
-                x = x - 7;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                getLogger().info("\n\n\n" + portal +", " + block + ", " + block.getType());
-                if (block.getType() == portal)
-                    block.setType(air); // x = -3
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = -2
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = -1
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = 0
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = 1
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = 2
-
-                x = x + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                if (block.getType() == portal)
-                    block.setType(air); // x = 3
-
-                z = z + 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                getLogger().info("\n\n\n" + portal +", " + block + ", " + block.getType());
-
-                A = A - 1;
-                block.getLocation().setX(x);
-                block.getLocation().setZ(z);
-                getLogger().info("\n\n\n" + portal +", " + block + ", " + block.getType());
-
-            }
-        }
-    }*/
 }
